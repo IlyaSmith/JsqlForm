@@ -88,6 +88,7 @@ for ( int i=0; i < columnCount; i++) {
 if (columnTypes.get(i) == String.class)
 row.add(rs.getString(i+1));
 else
+    System.out.println(columnTypes.get(i));
 row.add(rs.getObject(i+1));
 }
 synchronized (data) {
