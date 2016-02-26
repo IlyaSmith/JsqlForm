@@ -13,6 +13,7 @@ import javax.swing.table.AbstractTableModel;
 /**
  *
  * @author Ilya
+ * Класс адаптирован для БД Asterisk
  */
 public class DatabaseTableModel extends AbstractTableModel {
 // здесь мы будем хранить названия столбцов

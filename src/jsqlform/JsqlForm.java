@@ -35,7 +35,7 @@ public class JsqlForm extends JFrame {
     
     // параметры подключения
 
-private String queryString = "SELECT * FROM cdr where calldate > '2016-01-24 00:00:00.0'";
+private String queryString = "SELECT calldate,src,dst,duration,billsec  FROM cdr where calldate > '2016-01-26 00:00:00.0'";
  
 
 private DatabaseTableModel dbm;
@@ -100,7 +100,7 @@ public void actionAdd() {
     String phone = phoneTextField.getText();
     String date = dateTextField.getText();
     
-    setQuerySting ("SELECT "/*calldate,src,duration,billsec*/+"* FROM cdr where calldate > '"+date+" 00:00:00.0'and dst = '"+phone+"'");
+   setQuerySting ("SELECT FROM cdr where calldate > '"+date+" 00:00:00.0'and dst = '"+phone+"'");
     JsConn jsc = new JsConn (dbm,queryString);
 }
 
