@@ -4,15 +4,19 @@
  * and open the template in the editor.
  */
 package jsqlform;
-
+import java.util.regex.Matcher;  
+import java.util.regex.Pattern;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.text.SimpleDateFormat;
 import javax.swing.JButton;
-
+import java.util.Date;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -30,20 +34,21 @@ import javax.swing.JTextField;
  *
  * @author Ilya
  */
-public class JsqlForm extends JFrame {
+public class JsqlForm extends JFrame implements Observer {
 
     
     // параметры подключения
 
-private String queryString = "SELECT calldate,src,dst,duration,billsec  FROM cdr where calldate > '2016-01-26 00:00:00.0'";
- 
+private String queryString ;//= "SELECT calldate,src,dst,duration,billsec  FROM cdr where calldate > '2016-01-26 00:00:00.0'";
+private String dataString;
 
-private DatabaseTableModel dbm;
+private DatabaseTableModelForAst dbm;
 private JTextField phoneTextField;
 private JTextField dateTextField;
-
+private Timer tm;
 
 public JsqlForm() {
+    
    //Панель ввода, формирования стоки запроса в БД
     // Set up file menu.
     JMenuBar menuBar = new JMenuBar();
@@ -63,7 +68,9 @@ public JsqlForm() {
     // Set up add panel.
     JPanel addPanel = new JPanel();
     phoneTextField = new JTextField(4);
-    dateTextField = new JTextField(10);
+    //Текстовое поле с текущей датой
+    
+    dateTextField = new JTextField(getData());
     addPanel.add(phoneTextField);
     addPanel.add(dateTextField);
     JButton addButton = new JButton("GO");
@@ -75,9 +82,14 @@ public JsqlForm() {
     addPanel.add(addButton);
     getContentPane().setLayout(new BorderLayout());
     getContentPane().add(addPanel,BorderLayout.NORTH);
+    
+    //Таймер
+     tm = new Timer();
+     tm.addObserver(this);
+     
     // наша модель
 dbm =
-new DatabaseTableModel(false);
+new DatabaseTableModelForAst(false);
 
 // таблица и окно
 JTable table = new JTable(dbm);
@@ -91,6 +103,7 @@ setSize(800, 700);
       }
     });
 getContentPane().add(new JScrollPane(table));
+
 //
 
  
@@ -99,24 +112,51 @@ getContentPane().add(new JScrollPane(table));
 public void actionAdd() {
     String phone = phoneTextField.getText();
     String date = dateTextField.getText();
+    //Убираем пробелы
+   
+    date = date.replace(" ","");
+    //date = date.replace(".", "-");
+    //Проверка
+    Pattern p = Pattern.compile("^[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])$");  
+    Matcher m = p.matcher(date);  
+    if (m.matches() ){
+   setQuerySting ("SELECT calldate,src,dst,duration,billsec,disposition FROM cdr where calldate > '"+date+" 00:00:00.0'and dst = '"+phone+"'");
+    JsConn jsc = new JsConn (dbm,queryString);}
     
-   setQuerySting ("SELECT FROM cdr where calldate > '"+date+" 00:00:00.0'and dst = '"+phone+"'");
-    JsConn jsc = new JsConn (dbm,queryString);
+    else {
+        errorDate(date);
+    }
+//    tm.counter(true);
 }
 
 public void setQuerySting (String arg) {
     queryString = arg;
 }
-
+//
+private String getData () {
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+    Date d = new Date();
+    return format.format(d);
+}
  // Exit this program.
   private void actionExit() {
     System.exit(0);
   }
-  
+  // Обработка ошибок
+  private void errorDate(String date) {
+      System.out.print(date);
+  }
 public static void main(String[] args) {
 JsqlForm jsf = new JsqlForm();
 jsf.show();
 }//end main 
+
+    @Override
+    public void update(Observable o, Object arg) {
+        
+        actionAdd();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
    
     
 }

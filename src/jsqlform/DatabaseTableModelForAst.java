@@ -22,8 +22,8 @@ public class DatabaseTableModelForAst extends AbstractTableModel {
     "Phone dst" ,"Time", "Billing time", "Status"};
 
   // These are the classes for each column's values.
-  private static final Class[] columnTypes = {String.class,
-    String.class, String.class, String.class, Integer.class, Integer.class, String.class};
+ // private static final Class[] columnTypes = {String.class,
+   // String.class, String.class, String.class, Integer.class, Integer.class, String.class};
   
   // хранилище для полученных данных из базы данных
 private ArrayList data = new ArrayList();
@@ -45,7 +45,10 @@ return data.size();
     public int getColumnCount() {
        return columnNames.length;
     }
-
+// название столбца
+public String getColumnName(int column) {
+return columnNames[column];
+}
     @Override
     public Object getValueAt(int row, int column) {
         synchronized (data) {
@@ -54,17 +57,19 @@ return ((ArrayList)data.get(row)).get(column);
     }
     
     public void setDataSource( ResultSet rs) throws Exception {
-        
+   data.clear();
         // получаем данные
+   // сообщаем об изменениях в структуре данных
+fireTableStructureChanged();
 while ( rs.next() ) {
 // здесь будем хранить ячейки одной строки
 ArrayList row = new ArrayList();
 for ( int i=0; i < columnCount; i++) {
-if (columnTypes[i] == String.class)
+//if (columnTypes[i] == String.class)
 row.add(rs.getString(i+1));
-else
-    System.out.println(columnTypes[i]);
-row.add(rs.getInt(i+1));
+//else
+//    System.out.println(columnTypes[i]);
+//row.add(rs.getInt(i+1));
 }
 synchronized (data) {
 data.add(row);

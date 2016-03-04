@@ -9,6 +9,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -23,9 +25,10 @@ dsn =  "jdbc:mysql://10.0.68.15:3306/asterisk",
 //pwd = "1234";
 pwd = "astRO#27"; 
     
-    public JsConn (DatabaseTableModel dbm,String queryString){
+    public JsConn (DatabaseTableModelForAst dbm,String queryString){
         
         // инициализация JDBC
+       // while (false) {
    Connection conn = null;
 try {
 //Class.forName("com.mysql.jdbc.Driver");
@@ -41,10 +44,17 @@ ResultSet rs = st.executeQuery(queryString);
 dbm.setDataSource(rs);
 rs.close();
 conn.close();
+try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Timer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
 } catch (Exception ex) {
 throw new RuntimeException(ex);
 }
         
     }
+//}
     
 }
