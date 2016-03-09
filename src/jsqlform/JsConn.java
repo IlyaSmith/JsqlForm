@@ -24,9 +24,10 @@ dsn =  "jdbc:mysql://10.0.68.15:3306/asterisk",
         uid = "root",
 //pwd = "1234";
 pwd = "astRO#27"; 
-    
-    public JsConn (DatabaseTableModelForAst dbm,String queryString){
-        
+ 
+    public void JsConn1 (DatabaseTableModelForAst dbm,String queryString, boolean stp )
+    {
+     // while (stp) {  
         // инициализация JDBC
        // while (false) {
    Connection conn = null;
@@ -44,17 +45,19 @@ ResultSet rs = st.executeQuery(queryString);
 dbm.setDataSource(rs);
 rs.close();
 conn.close();
-try {
+/*
+        try {
             Thread.sleep(1000);
         } catch (InterruptedException ex) {
             Logger.getLogger(Timer.class.getName()).log(Level.SEVERE, null, ex);
         }
+        */
 
 } catch (Exception ex) {
 throw new RuntimeException(ex);
 }
         
     }
-//}
-    
 }
+    
+//}

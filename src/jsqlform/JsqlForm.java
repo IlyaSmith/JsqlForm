@@ -17,6 +17,8 @@ import javax.swing.JButton;
 import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -34,7 +36,8 @@ import javax.swing.JTextField;
  *
  * @author Ilya
  */
-public class JsqlForm extends JFrame implements Observer {
+public class JsqlForm extends JFrame //implements Observer 
+{
 
     
     // параметры подключения
@@ -45,10 +48,14 @@ private String dataString;
 private DatabaseTableModelForAst dbm;
 private JTextField phoneTextField;
 private JTextField dateTextField;
-private Timer tm;
+private static Timer tm;
+private static boolean up;
+
+
+private JsConn jsc = new JsConn();
 
 public JsqlForm() {
-    
+    up = true;
    //Панель ввода, формирования стоки запроса в БД
     // Set up file menu.
     JMenuBar menuBar = new JMenuBar();
@@ -67,25 +74,19 @@ public JsqlForm() {
 
     // Set up add panel.
     JPanel addPanel = new JPanel();
-    phoneTextField = new JTextField(4);
+    phoneTextField = new JTextField(10);
     //Текстовое поле с текущей датой
     
     dateTextField = new JTextField(getData());
     addPanel.add(phoneTextField);
     addPanel.add(dateTextField);
     JButton addButton = new JButton("GO");
-    addButton.addActionListener(new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        actionAdd();
-      }
-    });
+    
     addPanel.add(addButton);
     getContentPane().setLayout(new BorderLayout());
     getContentPane().add(addPanel,BorderLayout.NORTH);
     
-    //Таймер
-     tm = new Timer();
-     tm.addObserver(this);
+    
      
     // наша модель
 dbm =
@@ -105,10 +106,26 @@ setSize(800, 700);
 getContentPane().add(new JScrollPane(table));
 
 //
-
+addButton.addActionListener(new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        actionStart();
+      }
+    });
  
 }
-
+public void actionStart() {
+   
+        actionAdd ();
+        /*
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Timer.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                */
+//        tm.counter(true);
+    
+}
 public void actionAdd() {
     String phone = phoneTextField.getText();
     String date = dateTextField.getText();
@@ -121,12 +138,12 @@ public void actionAdd() {
     Matcher m = p.matcher(date);  
     if (m.matches() ){
    setQuerySting ("SELECT calldate,src,dst,duration,billsec,disposition FROM cdr where calldate > '"+date+" 00:00:00.0'and dst = '"+phone+"'");
-    JsConn jsc = new JsConn (dbm,queryString);}
+     jsc.JsConn1 (dbm,queryString,true);}
     
     else {
         errorDate(date);
     }
-//    tm.counter(true);
+//  tm.counter(true);
 }
 
 public void setQuerySting (String arg) {
@@ -147,16 +164,23 @@ private String getData () {
       System.out.print(date);
   }
 public static void main(String[] args) {
+    
 JsqlForm jsf = new JsqlForm();
+/*
+//Таймер
+     tm = new Timer();
+     tm.addObserver(jsf);
+    */ 
+        
 jsf.show();
 }//end main 
 
-    @Override
-    public void update(Observable o, Object arg) {
+ /*   @Override
+  //  public void update(Observable o, Object arg) {
         
         actionAdd();
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-   
+   */
     
 }

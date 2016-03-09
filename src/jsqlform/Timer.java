@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -19,13 +19,15 @@ public class Timer extends Observable implements Runnable {
     time = System.currentTimeMillis();    
     }
   public void  counter(boolean stop) {
+      if (stop)
+      {
       //если меньше секунды то задержка
-      if (time+1000<System.currentTimeMillis()) {
+    //  if (time+1000<System.currentTimeMillis()) {
          // run ();
-      }
+     // }
       setChanged ();
-      notifyObservers (new Long (time) ); 
-      
+      notifyObservers (time); 
+      }
             
       
   
