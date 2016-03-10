@@ -52,7 +52,7 @@ private static Timer tm;
 private static boolean up;
 
 
-private JsConn jsc = new JsConn();
+//private JsConn jsc = new JsConn();
 
 public JsqlForm() {
     up = true;
@@ -74,7 +74,8 @@ public JsqlForm() {
 
     // Set up add panel.
     JPanel addPanel = new JPanel();
-    phoneTextField = new JTextField(10);
+    JPanel tablePanel = new JPanel();
+    phoneTextField = new JTextField("5208");
     //Текстовое поле с текущей датой
     
     dateTextField = new JTextField(getData());
@@ -85,6 +86,7 @@ public JsqlForm() {
     addPanel.add(addButton);
     getContentPane().setLayout(new BorderLayout());
     getContentPane().add(addPanel,BorderLayout.NORTH);
+   // getContentPane().add(tablePanel);
     
     
      
@@ -93,9 +95,9 @@ dbm =
 new DatabaseTableModelForAst(false);
 
 // таблица и окно
-JTable table = new JTable(dbm);
+//JTable table = new JTable(dbm);
 setTitle ("Asterisk Loader");
-setSize(800, 700); 
+setSize(700, 400); 
 
  // Handle window closing events.
     addWindowListener(new WindowAdapter() {
@@ -103,12 +105,12 @@ setSize(800, 700);
         actionExit();
       }
     });
-getContentPane().add(new JScrollPane(table));
-
+getContentPane().add(new TPane(dbm,this));
 //
 addButton.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         actionStart();
+        
       }
     });
  
@@ -116,6 +118,8 @@ addButton.addActionListener(new ActionListener() {
 public void actionStart() {
    
         actionAdd ();
+        
+
         /*
         try {
             Thread.sleep(1000);
@@ -138,7 +142,8 @@ public void actionAdd() {
     Matcher m = p.matcher(date);  
     if (m.matches() ){
    setQuerySting ("SELECT calldate,src,dst,duration,billsec,disposition FROM cdr where calldate > '"+date+" 00:00:00.0'and dst = '"+phone+"'");
-     jsc.JsConn1 (dbm,queryString,true);}
+    // jsc.JsConn1 (dbm,queryString,true);
+    }
     
     else {
         errorDate(date);
@@ -162,6 +167,9 @@ private String getData () {
   // Обработка ошибок
   private void errorDate(String date) {
       System.out.print(date);
+  }
+  public String getQueryString (){
+      return queryString;
   }
 public static void main(String[] args) {
     
