@@ -15,17 +15,11 @@ import java.awt.event.WindowEvent;
 import java.text.SimpleDateFormat;
 import javax.swing.JButton;
 import java.util.Date;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 import javax.swing.JTextField;
 //import jdk.nashorn.internal.ir.Statement;
 
@@ -48,7 +42,7 @@ private String dataString;
 private DatabaseTableModelForAst dbm;
 private JTextField phoneTextField;
 private JTextField dateTextField;
-private static Timer tm;
+
 private static boolean up;
 
 

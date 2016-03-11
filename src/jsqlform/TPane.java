@@ -35,7 +35,7 @@ public class TPane extends JScrollPane implements Runnable {
             jsf.actionAdd();}
            // String st = jsf.getQueryString();
             synchronized (jsc) {
-                System.out.println (jsc);
+               // System.out.println (jsc);
             jsc.JsConn1 (dbm,jsf.getQueryString(),true);}
             try {
                 Thread.sleep (2000);
